@@ -1,0 +1,1 @@
+This is an Asteroids clone I'm making in C++ with Allegro 5. There are no other resources required at this point in time (but be aware that the code uses C++0x features). Right now the style is terrible and I'm using Visual Studio but eventually I will transition to using Code::Blocks or Eclipse with the gcc toolchain.
