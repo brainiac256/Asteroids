@@ -21,6 +21,7 @@ public:
 		velocity = VEC2(0.0,0.0);
 		cooldown=0;
 		destroyme = false;
+		invincibilitycooldown = 20;
 	};
 	~Player(void);
 

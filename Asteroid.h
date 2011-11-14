@@ -18,6 +18,7 @@ public:
 		size = s;
 		rotation = r;
 		destroyme = false;
+		invincibilitycooldown = 20;
 	}
 	Asteroid(void){
 		//completely random asteroid
@@ -36,8 +37,10 @@ public:
 					  randfloat(-1,0),randfloat(-1,0));
 		rotation = randfloat(-PI/24,PI/24);
 		destroyme = false;
+		invincibilitycooldown = 20;
 	}
 	Asteroid(float nx, float ny, int l){
+		assert(l > 1);
 		//partially random asteroid
 		al_identity_transform(&myCurrentTransform);
 		x = nx;
@@ -55,6 +58,7 @@ public:
 					  randfloat(-1,0),randfloat(-1,0));
 		rotation = randfloat(-PI/24,PI/24);
 		destroyme = false;
+		invincibilitycooldown = 20;
 	}
 	~Asteroid(void);
 

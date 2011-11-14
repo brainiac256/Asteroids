@@ -14,6 +14,7 @@ void Asteroid::update(void){
 	if(y < 0)   y+=480;
 	//rotate slowly
 	direction += rotation;
+	if(invincibilitycooldown > 0) --invincibilitycooldown;
 }
 
 void Asteroid::draw(void){
@@ -30,17 +31,18 @@ void Asteroid::collide(GameObject* o){
 	//compare SQUARE distances to save on fpu operations
 	//if c = sqrt(a^2 + b^2) then c^2 = a^2 + b^2 with the additional bonus that
 	//squares are cheaper to compute than square roots
-	if(o != this && squareDistance(x,y,o->getX(), o->getY()) < pow(size + o->getS(), 2))
+	if(o != this && squareDistance(x,y,o->getX(), o->getY()) < pow(size + o->getS(), 2)
+		&& isInvincible() == false)
 	{
 		destroyme = true;
 		//myColor = al_map_rgb_f(1.0,.1,.1);
-		if(size < 2) {
+		if(level < 3) {
 			//Smallest asteroid, just die
 			//TODO: score stuff managed in the GameEngine
 		} else {
 			//make smaller asteroids
 			//add(new Asteroid(x, y, level-1));
-			//add(new Asteroid(x, y, level-1));
+			add(new Asteroid(x, y, level-1));
 			add(new Asteroid(x, y, level-1));
 			//TODO: score stuff managed in the GameEngine
 		}

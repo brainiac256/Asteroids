@@ -82,10 +82,12 @@ public:
 	float getX() {return x;}
 	float getY() {return y;}
 	float getS() {return size;}
+	bool isInvincible() {return (invincibilitycooldown > 0);}
 protected:
 	bool destroyme;
 	float x,y;
 	float size;
+	int invincibilitycooldown;
 };
 
 typedef struct ObjectCapsule {

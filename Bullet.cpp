@@ -14,6 +14,7 @@ void Bullet::update(void){
 	if(y < 0)   y+=480;
 	--life;
 	if(life <= 0) destroyme = true;
+	if(invincibilitycooldown > 0) --invincibilitycooldown;
 }
 
 void Bullet::draw(void){

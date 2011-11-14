@@ -17,6 +17,7 @@ void Player::draw(void)
 
 void Player::update(void)
 {
+	if(invincibilitycooldown > 0) --invincibilitycooldown;
 	//movement stuffs
 	if(isKeyOn(KEY_LEFT)){
 		direction -= PI/32;
