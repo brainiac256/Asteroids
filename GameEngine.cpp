@@ -44,16 +44,16 @@ void mergeInsert(std::list< ObjectCapsule* > *l, ObjectCapsule* c){
 
 void updateEngine(void){
 	std::list< ObjectCapsule* > sortedObjects;
-	for (auto c = objectList.begin(); c != objectList.end(); ++c)
+	for (auto c = objectList.begin(); c != objectList.end(); )
 	{
 		c->o->update();
 		
 		if(c->o->needs_destroy()) {
 			delete (*c).o;
-			c = objectList.erase(c);
-			--c ; //needed because erase returns the position AFTER the erase, and we're already incrementing
+			c = objectList.erase(c); // advances the iterator to the element after the one we erased
 		} else {
 			mergeInsert(&sortedObjects, &(*c)); //sort the object into a list for spatial hashing
+			++c; // advance the iterator
 		}
 	}
 
@@ -86,7 +86,8 @@ void updateEngine(void){
 		//check collision forward in the list
 		auto forwardCheck = i;
 		while(forwardCheck!=sortedObjects.end() && (**forwardCheck).o->getX() < ((**i).o->getX() + 10)) {
-			(**i).o->collide((**forwardCheck).o);
+			if((**i).o->needs_destroy() == false && (**forwardCheck).o->needs_destroy() == false)
+				(**i).o->collide((**forwardCheck).o);
 			++forwardCheck;
 		}
 	} // end FOREACH
@@ -96,7 +97,8 @@ void updateEngine(void){
 		//check collision backward in the list
 		auto backwardCheck = i;
 		while(backwardCheck!=sortedObjects.rend() && (**backwardCheck).o->getX() < ((**i).o->getX() + 10)) {
-			(**i).o->collide((**backwardCheck).o);
+			if((**i).o->needs_destroy() == false && (**backwardCheck).o->needs_destroy() == false)
+				(**i).o->collide((**backwardCheck).o);
 			++backwardCheck;
 		}
 	} // end FOREACH

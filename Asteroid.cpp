@@ -23,7 +23,6 @@ void Asteroid::draw(void){
 	al_translate_transform(&myCurrentTransform,x,y);
 	al_use_transform(&myCurrentTransform);
 	drawQuad(&myQuad, myColor);
-	//al_draw_circle(0,0,1,al_map_rgb(.3,.3,.3),0);
 }
 
 void Asteroid::collide(GameObject* o){
@@ -32,7 +31,19 @@ void Asteroid::collide(GameObject* o){
 	//if c = sqrt(a^2 + b^2) then c^2 = a^2 + b^2 with the additional bonus that
 	//squares are cheaper to compute than square roots
 	if(o != this && squareDistance(x,y,o->getX(), o->getY()) < pow(size + o->getS(), 2))
-		myColor = al_map_rgb_f(1.0,.1,.1);
-	//std::cout << "\nCollided an Asteroid with a " << typeid(*o).name() << std::endl;
+	{
+		destroyme = true;
+		//myColor = al_map_rgb_f(1.0,.1,.1);
+		if(size < 2) {
+			//Smallest asteroid, just die
+			//TODO: score stuff managed in the GameEngine
+		} else {
+			//make smaller asteroids
+			//add(new Asteroid(x, y, level-1));
+			//add(new Asteroid(x, y, level-1));
+			add(new Asteroid(x, y, level-1));
+			//TODO: score stuff managed in the GameEngine
+		}
+	}
 	return;
 }
