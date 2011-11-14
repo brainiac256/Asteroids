@@ -1,3 +1,4 @@
+#define NDEBUG
 #include <iostream>
 #include <allegro5/allegro5.h>
 #include "GameEngine.h"
