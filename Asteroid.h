@@ -17,6 +17,7 @@ public:
 		life = l;
 		size = s;
 		rotation = r;
+		destroyme = false;
 	}
 	Asteroid(void){
 		//completely random asteroid
@@ -34,6 +35,7 @@ public:
 					  randfloat(0,1),randfloat(-1,0),
 					  randfloat(-1,0),randfloat(-1,0));
 		rotation = randfloat(-PI/24,PI/24);
+		destroyme = false;
 	}
 	Asteroid(float nx, float ny, int l){
 		//partially random asteroid
@@ -52,11 +54,13 @@ public:
 					  randfloat(0,1),randfloat(-1,0),
 					  randfloat(-1,0),randfloat(-1,0));
 		rotation = randfloat(-PI/24,PI/24);
+		destroyme = false;
 	}
 	~Asteroid(void);
 
 	virtual void draw(void) override;
 	virtual void update(void) override;
+	virtual void collide(GameObject* o) override;
 private:
 	ALLEGRO_TRANSFORM myCurrentTransform;
 	ALLEGRO_COLOR myColor;

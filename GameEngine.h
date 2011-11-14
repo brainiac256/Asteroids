@@ -3,8 +3,11 @@
 #include <allegro5\allegro.h>
 #include <allegro5\allegro_primitives.h>
 #include <allegro5\color.h>
+#include <iostream>
 #include <algorithm>
 #include <list>
+#include <set>
+#include <cassert>
 #include <random>
 
 const unsigned long long MAX_NUMBER_OF_OBJECTS = MAXULONGLONG;
@@ -74,7 +77,11 @@ public:
 	GameObject(void){ this->destroyme = false; }
 	virtual void update(void) = 0;
 	virtual void draw(void) = 0;
+	virtual void collide(GameObject* o) = 0;
 	bool needs_destroy() { return destroyme; };
+	float getX() {return x;}
+	float getY() {return y;}
+	float getS() {return size;}
 protected:
 	bool destroyme;
 	float x,y;
@@ -106,5 +113,7 @@ void drawQuad(QUAD* q, ALLEGRO_COLOR c);
 
 float randfloat(float min, float max);
 int randint(int min, int max);
+
+float squareDistance(float x1, float y1, float x2, float y2);
 
 #endif //ndef GEHEADER

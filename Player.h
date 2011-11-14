@@ -3,6 +3,7 @@
 #include "gameengine.h"
 //#include <allegro5\allegro_primitives.h>
 #include <allegro5\color.h>
+#include "Bullet.h"
 
 class Player :
 	public GameObject
@@ -19,11 +20,13 @@ public:
 		direction=0;
 		velocity = VEC2(0.0,0.0);
 		cooldown=0;
+		destroyme = false;
 	};
 	~Player(void);
 
 	virtual void draw(void) override;
 	virtual void update(void) override;
+	virtual void collide(GameObject* o) override;
 private:
 	ALLEGRO_TRANSFORM myCurrentTransform;
 	ALLEGRO_COLOR myColor;

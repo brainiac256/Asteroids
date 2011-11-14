@@ -12,6 +12,7 @@ void Player::draw(void)
 	al_translate_transform(&myCurrentTransform,x,y);
 	al_use_transform(&myCurrentTransform);
 	drawTriangle(&player_tri, this->myColor);
+	//al_draw_circle(0,0,1,al_map_rgb(.3,.3,.3),0);
 }
 
 void Player::update(void)
@@ -45,11 +46,17 @@ void Player::update(void)
 	}
 	else {
 		if (isKeyOn(KEY_SPACE)) {
-		//add new Bullet object
-
-		//reset cooldown
-		cooldown = MAX_COOLDOWN;
+			//add new Bullet object
+			add(new Bullet(x, y, VEC2(direction, 12)));
+			//reset cooldown
+			cooldown = MAX_COOLDOWN;
 		}
 		myColor = al_map_rgb_f(1,1,1);
 	}
+}
+
+void Player::collide(GameObject* o){
+	assert(o != NULL);
+	//std::cout << "\nCollided Player with a " << typeid(*o).name() << std::endl;
+	return;
 }
