@@ -139,9 +139,11 @@ int main(int argc, char **argv)
       if(redraw && al_is_event_queue_empty(event_queue)) {
          redraw = false;
          al_clear_to_color(al_map_rgb_f(0,0,0)); //clear to black
-		 drawObjects();
-         al_flip_display();
+		 //drawObjects();
 		 updateEngine();
+         al_flip_display();
+		 if(randfloat(0,1) > .998) add(new Asteroid());
+		 
 	  }
 	  
    }

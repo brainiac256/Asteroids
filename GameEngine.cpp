@@ -5,6 +5,7 @@ unsigned long long counter = 0; //used to give each GameObject a unique ID, neve
 int numOfObjects = 0; //used to keep track of how many objects in play at a time
 bool key[5]= {false, false, false, false, false};
 std::mt19937 randomEngine(time(NULL));
+int score;
 
 bool compareCapsules(ObjectCapsule a, ObjectCapsule b) {
 	return (a.o->getX() < a.o->getY());
@@ -47,15 +48,18 @@ void updateEngine(void){
 	for (auto c = objectList.begin(); c != objectList.end(); )
 	{
 		c->o->update();
-		
+		c->o->draw(); //draw the object
 		if(c->o->needs_destroy()) {
 			delete (*c).o;
 			c = objectList.erase(c); // advances the iterator to the element after the one we erased
 		} else {
 			mergeInsert(&sortedObjects, &(*c)); //sort the object into a list for spatial hashing
+			
 			++c; // advance the iterator
 		}
 	}
+
+
 
 	/***************************************************
 	 * Right, so here's how the collision algorithm works.
@@ -85,9 +89,13 @@ void updateEngine(void){
 	{ // FOREACH
 		//check collision forward in the list
 		auto forwardCheck = i;
+		++forwardCheck;
 		while(forwardCheck!=sortedObjects.end() && (**forwardCheck).o->getX() < ((**i).o->getX() + 10)) {
 			if((**i).o->needs_destroy() == false && (**forwardCheck).o->needs_destroy() == false)
+			{
 				(**i).o->collide((**forwardCheck).o);
+				(**forwardCheck).o->collide((**i).o);
+			}
 			++forwardCheck;
 		}
 	} // end FOREACH
@@ -96,18 +104,21 @@ void updateEngine(void){
 	{ // FOREACH
 		//check collision backward in the list
 		auto backwardCheck = i;
+		++backwardCheck;
 		while(backwardCheck!=sortedObjects.rend() && (**backwardCheck).o->getX() < ((**i).o->getX() + 10)) {
 			if((**i).o->needs_destroy() == false && (**backwardCheck).o->needs_destroy() == false)
+			{
 				(**i).o->collide((**backwardCheck).o);
+				(**backwardCheck).o->collide((**i).o);
+			}
 			++backwardCheck;
 		}
 	} // end FOREACH
 }
 void drawObjects(void){
-	for (auto c = objectList.begin(); c != objectList.end(); ++c)
-	{
-		c->o->draw();
-	}
+	assert(false);
+	//this functionality has been folded into updateEngine()
+	return;
 }
 
 bool isKeyOn(int k){
@@ -180,4 +191,14 @@ float squareDistance( float x1, float y1, float x2, float y2){
 
 
 	return d;
+}
+
+float smootherStep(float t){
+	assert(t >= 0 && t <= 1);
+	return t*t*t*(t*(t*6 - 15) + 10);
+}
+
+void addScore(int n){
+	score += n;
+	return;
 }

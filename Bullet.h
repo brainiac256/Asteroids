@@ -17,7 +17,7 @@ public:
 		destroyme = false;
 		size = 2;
 		life = 90;
-		invincibilitycooldown = 5;
+		invincibilitycooldown = 2;
 		myColor = al_map_rgb_f(0,1,1);
 	}
 	~Bullet(void);

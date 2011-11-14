@@ -14,7 +14,12 @@ void Bullet::update(void){
 	if(y < 0)   y+=480;
 	--life;
 	if(life <= 0) destroyme = true;
-	if(invincibilitycooldown > 0) --invincibilitycooldown;
+	if(invincibilitycooldown > 0){
+		--invincibilitycooldown;
+		myColor = al_map_rgb_f(0,
+			                   smootherStep((20-(float)invincibilitycooldown)/20),
+							   1);
+	}
 }
 
 void Bullet::draw(void){
@@ -30,5 +35,9 @@ void Bullet::draw(void){
 void Bullet::collide(GameObject* o){
 	assert(o != NULL);
 	//std::cout << "\nCollided a Bullet with a " << typeid(*o).name() << std::endl;
+	if(o != this && squareDistance(x,y,o->getX(), o->getY()) < pow(size + o->getS(), 2))
+	{
+		life = 1; // set life to 1 so it'll be destroyed on the next tick
+	}
 	return;
 }

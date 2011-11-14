@@ -17,7 +17,12 @@ void Player::draw(void)
 
 void Player::update(void)
 {
-	if(invincibilitycooldown > 0) --invincibilitycooldown;
+	if(invincibilitycooldown > 0){
+		--invincibilitycooldown;
+		myColor = al_map_rgb_f(smootherStep((20-(float)invincibilitycooldown)/20),
+			                   smootherStep((20-(float)invincibilitycooldown)/20),
+							   1);
+	}
 	//movement stuffs
 	if(isKeyOn(KEY_LEFT)){
 		direction -= PI/32;
@@ -43,7 +48,7 @@ void Player::update(void)
 	//firing stuffs
 	if(cooldown > 0) {
 		--cooldown;
-		myColor = al_map_rgb_f(1,((float)MAX_COOLDOWN-cooldown)/(float)MAX_COOLDOWN,((float)MAX_COOLDOWN-cooldown)/(float)MAX_COOLDOWN);
+		//myColor = al_map_rgb_f(1,((float)MAX_COOLDOWN-cooldown)/(float)MAX_COOLDOWN,((float)MAX_COOLDOWN-cooldown)/(float)MAX_COOLDOWN);
 	}
 	else {
 		if (isKeyOn(KEY_SPACE)) {
@@ -52,7 +57,6 @@ void Player::update(void)
 			//reset cooldown
 			cooldown = MAX_COOLDOWN;
 		}
-		myColor = al_map_rgb_f(1,1,1);
 	}
 }
 

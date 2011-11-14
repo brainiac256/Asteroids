@@ -14,7 +14,12 @@ void Asteroid::update(void){
 	if(y < 0)   y+=480;
 	//rotate slowly
 	direction += rotation;
-	if(invincibilitycooldown > 0) --invincibilitycooldown;
+	if(invincibilitycooldown > 0) {
+		--invincibilitycooldown;
+		myColor = al_map_rgb_f(smootherStep((20-(float)invincibilitycooldown)/20),
+			                   smootherStep(((float)invincibilitycooldown)/20),
+							   1);
+	}
 }
 
 void Asteroid::draw(void){
@@ -29,7 +34,7 @@ void Asteroid::draw(void){
 void Asteroid::collide(GameObject* o){
 	assert(o != NULL);
 	//compare SQUARE distances to save on fpu operations
-	//if c = sqrt(a^2 + b^2) then c^2 = a^2 + b^2 with the additional bonus that
+	//if c < sqrt(a^2 + b^2) then c^2 < a^2 + b^2 with the additional bonus that
 	//squares are cheaper to compute than square roots
 	if(o != this && squareDistance(x,y,o->getX(), o->getY()) < pow(size + o->getS(), 2)
 		&& isInvincible() == false)

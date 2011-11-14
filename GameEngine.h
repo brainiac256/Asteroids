@@ -118,4 +118,8 @@ int randint(int min, int max);
 
 float squareDistance(float x1, float y1, float x2, float y2);
 
+float smootherStep(float t);
+
+void addScore(int n);
+
 #endif //ndef GEHEADER
