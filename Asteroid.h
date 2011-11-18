@@ -4,6 +4,7 @@
 class Asteroid :
 	public GameObject
 {
+	static const int MAX_AST_INV = 40;
 public:
 	Asteroid(float nx, float ny, float d, VEC2 v, ALLEGRO_COLOR c,
 		     QUAD q, int l, int s, float r){
@@ -18,7 +19,7 @@ public:
 		size = s;
 		rotation = r;
 		destroyme = false;
-		invincibilitycooldown = 20;
+		invincibilitycooldown = MAX_AST_INV;
 	}
 	Asteroid(void){
 		//completely random asteroid

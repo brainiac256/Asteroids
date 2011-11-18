@@ -8,7 +8,7 @@ std::mt19937 randomEngine(time(NULL));
 int score;
 
 bool compareCapsules(ObjectCapsule a, ObjectCapsule b) {
-	return (a.o->getX() < a.o->getY());
+	return (a.o->getX() < a.o->getX());
 }
 
 unsigned long long add(GameObject* o){
@@ -32,15 +32,18 @@ void mergeInsert(std::list< ObjectCapsule* > *l, ObjectCapsule* c){
 	if(!l->empty()){
 		//if the list is empty we don't need to do all this
 		//advance the iterator until
-		//	a) our current x-coord is greater than the x-coord we want to insert
-		//orb) we reach the end of the array
+		//	 a) our current x-coord >= than the x-coord we want to insert
+		//or b) we reach the end of the array
 		while(i != l->end() && ((*i)->o->getX() < c->o->getX())){
 			++i;
 		}
 		if(i == l->end()) --i;
+		//add c to l
+		l->insert(i, c);
+	} else {
+		l->insert(i, c);
 	}
-	//add c to l
-	l->insert(i, c);
+	
 }
 
 void updateEngine(void){
@@ -48,13 +51,13 @@ void updateEngine(void){
 	for (auto c = objectList.begin(); c != objectList.end(); )
 	{
 		c->o->update();
-		c->o->draw(); //draw the object
+		
 		if(c->o->needs_destroy()) {
 			delete (*c).o;
 			c = objectList.erase(c); // advances the iterator to the element after the one we erased
 		} else {
 			mergeInsert(&sortedObjects, &(*c)); //sort the object into a list for spatial hashing
-			
+			c->o->draw(); //draw the object
 			++c; // advance the iterator
 		}
 	}

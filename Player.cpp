@@ -62,6 +62,7 @@ void Player::update(void)
 
 void Player::collide(GameObject* o){
 	assert(o != NULL);
+	if(o!= this)	invincibilitycooldown = 20;
 	//std::cout << "\nCollided Player with a " << typeid(*o).name() << std::endl;
 	return;
 }

@@ -16,8 +16,8 @@ void Asteroid::update(void){
 	direction += rotation;
 	if(invincibilitycooldown > 0) {
 		--invincibilitycooldown;
-		myColor = al_map_rgb_f(smootherStep((20-(float)invincibilitycooldown)/20),
-			                   smootherStep(((float)invincibilitycooldown)/20),
+		myColor = al_map_rgb_f(smootherStep((MAX_AST_INV-(float)invincibilitycooldown)/MAX_AST_INV),
+			                   smootherStep(((float)invincibilitycooldown)/MAX_AST_INV),
 							   1);
 	}
 }
