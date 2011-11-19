@@ -41,9 +41,9 @@ void updateEngine(void){
 		for(int n = 0; n < objectList.size(); ++n){
 			//BRUTEFORCE COLLISION DETECTION LOOP, GOD SAVE US ALL
 			if(n!=c &&
-			   abs(objectList[n].o->getX() - objectList[c].o->getX()) < 15 &&
 			   objectList[n].o->isInvincible() == false &&
-			   objectList[c].o->isInvincible() == false) {
+			   objectList[c].o->isInvincible() == false &&
+			   abs(objectList[n].o->getX() - objectList[c].o->getX()) < 12) {
 					/*ALLEGRO_TRANSFORM t;
 					al_identity_transform(&t);
 					al_use_transform(&t);
@@ -70,6 +70,8 @@ void updateEngine(void){
 	}//outer for-loop
 
 	//draw particles
+
+	//TODO: draw particles onto a separate buffer, blur it, and overdraw onto the screen display
 	if(particleList.size() > 0) {
 		ALLEGRO_TRANSFORM t;
 		al_identity_transform(&t);

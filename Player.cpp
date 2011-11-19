@@ -32,6 +32,14 @@ void Player::update(void)
 	if(isKeyOn(KEY_UP)){
 		addVEC2(&velocity, new VEC2(direction, .1));
 		if(velocity.magnitude > 5) velocity.magnitude = 5;
+		addParticle(new Particle(x, y,
+			                     VEC2(direction+randfloat(PI/-16, PI/16), -2.5),
+								 VEC2(direction, .04),
+								 al_map_rgba_f(.5+randfloat(-.1,.1),.3+randfloat(-.1,.1),.05,.3)));
+		addParticle(new Particle(x, y,
+			                     VEC2(direction+randfloat(PI/-16, PI/16), -2.5),
+								 VEC2(direction, .04),
+								 al_map_rgba_f(.5+randfloat(-.1,.1),.3+randfloat(-.1,.1),.05,.3)));
 	}
 	if(isKeyOn(KEY_DOWN)){
 		if(velocity.magnitude > .5) velocity.magnitude *= .95;
