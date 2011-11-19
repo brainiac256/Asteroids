@@ -35,7 +35,7 @@ void Bullet::draw(void){
 void Bullet::collide(GameObject* o){
 	assert(o != NULL);
 	//std::cout << "\nCollided a Bullet with a " << typeid(*o).name() << std::endl;
-	if(o != this && squareDistance(x,y,o->getX(), o->getY()) < pow(size + o->getS(), 2))
+	if(o != this && o->amIABullet() == false && squareDistance(x,y,o->getX(), o->getY()) < pow(size + o->getS(), 2) )
 	{
 		life = 1; // set life to 1 so it'll be destroyed on the next tick
 	}

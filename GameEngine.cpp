@@ -1,6 +1,7 @@
 #include "GameEngine.h"
 
-std::list< ObjectCapsule > objectList;
+std::vector< ObjectCapsule > objectList;
+std::vector< Particle* > particleList;
 unsigned long long counter = 0; //used to give each GameObject a unique ID, never decrements
 int numOfObjects = 0; //used to keep track of how many objects in play at a time
 bool key[5]= {false, false, false, false, false};
@@ -25,102 +26,77 @@ unsigned long long add(GameObject* o){
 	return -1;
 }
 
-void mergeInsert(std::list< ObjectCapsule* > *l, ObjectCapsule* c){
-	assert(l != NULL);
-	assert(c != NULL);
-	std::list< ObjectCapsule* >::iterator i = (*l).begin();
-	if(!l->empty()){
-		//if the list is empty we don't need to do all this
-		//advance the iterator until
-		//	 a) our current x-coord >= than the x-coord we want to insert
-		//or b) we reach the end of the array
-		while(i != l->end() && ((*i)->o->getX() < c->o->getX())){
-			++i;
-		}
-		if(i == l->end()) --i;
-		//add c to l
-		l->insert(i, c);
-	} else {
-		l->insert(i, c);
-	}
-	
+void addParticle(Particle* p){
+	particleList.push_back(p);
+	return;
 }
 
 void updateEngine(void){
 	std::list< ObjectCapsule* > sortedObjects;
-	for (auto c = objectList.begin(); c != objectList.end(); )
+	for (int c = 0; c < objectList.size(); )
 	{
-		c->o->update();
+		objectList[c].o->update();
+
+		//God help me, I'm doing brute-force collision detection now
+		for(int n = 0; n < objectList.size(); ++n){
+			//BRUTEFORCE COLLISION DETECTION LOOP, GOD SAVE US ALL
+			if(n!=c &&
+			   abs(objectList[n].o->getX() - objectList[c].o->getX()) < 15 &&
+			   objectList[n].o->isInvincible() == false &&
+			   objectList[c].o->isInvincible() == false) {
+					/*ALLEGRO_TRANSFORM t;
+					al_identity_transform(&t);
+					al_use_transform(&t);
+					al_draw_rectangle(objectList[n].o->getX(), objectList[n].o->getY(), 
+						              objectList[c].o->getX(), objectList[c].o->getY(), 
+									  al_map_rgba_f(.2,.2,.6,.3),3);*/
+				   // ^^^ collision visualization block ^^^
+					objectList[n].o->collide(objectList[c].o);
+					objectList[c].o->collide(objectList[n].o);
+			}
+			
+		}
 		
-		if(c->o->needs_destroy()) {
-			delete (*c).o;
-			c = objectList.erase(c); // advances the iterator to the element after the one we erased
+		if(objectList[c].o->needs_destroy()) {
+			delete objectList[c].o;
+			objectList[c] = objectList.back();
+			objectList.pop_back();
+			//no advance of iterator needed because we replaced the current object with the back object
 		} else {
-			mergeInsert(&sortedObjects, &(*c)); //sort the object into a list for spatial hashing
-			c->o->draw(); //draw the object
+			//TODO: sort the object into a list for spatial hashing
+			objectList[c].o->draw(); //draw the object
 			++c; // advance the iterator
 		}
+	}//outer for-loop
+
+	//draw particles
+	if(particleList.size() > 0) {
+		ALLEGRO_TRANSFORM t;
+		al_identity_transform(&t);
+		al_use_transform(&t);
+		for(int i=0; i < particleList.size(); ) {
+			//draw particleList[i]
+			al_draw_filled_circle(particleList[i]->x, particleList[i]->y, 1.5, particleList[i]->myColor);
+			--(particleList[i]->life);
+			if(particleList[i]->life < 0) {
+				
+				//remove particle from list by replacing from back
+				particleList[i] = particleList.back();
+				particleList.pop_back();
+			} else {
+				addVEC2(&(particleList[i]->velocity), &(particleList[i]->acceleration));
+				particleList[i]->x += cos(particleList[i]->velocity.angle)*particleList[i]->velocity.magnitude;
+				particleList[i]->y += sin(particleList[i]->velocity.angle)*particleList[i]->velocity.magnitude;
+				//advance to next particle
+				++i;
+			}
+		}
 	}
-
-
-
-	/***************************************************
-	 * Right, so here's how the collision algorithm works.
-	 * We're given a sorted list of ObjectCapsule* - that's
-	 * sortedObjects. For each element therein, we iterate
-	 * in two directions, first forward, then backward, in
-	 * each direction going until we either
-	 *		a)  exceed a reasonable collidable limit on the
-	 *			X-axis, that would be 10 units or
-	 *		b)  hit the front or back of the list.
-	 * This works because the list is sorted on the X-coord
-	 * of the GameObject's, so we're reducing the amount of
-	 * collisions that we actually have to check, so in a
-	 * good case (decent spread of objects across the X axis)
-	 * we're doing, eh, around 1/10 of the work that a brute
-	 * force algorithm would do, even taking into account
-	 * the construction of the sorted list. Of course, in
-	 * the WORST case, we're doing MORE work since we're
-	 * doing ALL the collision checks that the brute-force
-	 * algo would do, PLUS the merge-sort--but the worst
-	 * case requires all the GameObject's to be within 10 u
-	 * of each other on the X-axis, which should be rare.
-	 *
-	 ***************************************************/
-
-	for (auto i = sortedObjects.begin(); i != sortedObjects.end(); ++i)
-	{ // FOREACH
-		//check collision forward in the list
-		auto forwardCheck = i;
-		++forwardCheck;
-		while(forwardCheck!=sortedObjects.end() && (**forwardCheck).o->getX() < ((**i).o->getX() + 10)) {
-			if((**i).o->needs_destroy() == false && (**forwardCheck).o->needs_destroy() == false)
-			{
-				(**i).o->collide((**forwardCheck).o);
-				(**forwardCheck).o->collide((**i).o);
-			}
-			++forwardCheck;
-		}
-	} // end FOREACH
-
-	for (auto i = sortedObjects.rbegin(); i != sortedObjects.rend(); ++i)
-	{ // FOREACH
-		//check collision backward in the list
-		auto backwardCheck = i;
-		++backwardCheck;
-		while(backwardCheck!=sortedObjects.rend() && (**backwardCheck).o->getX() < ((**i).o->getX() + 10)) {
-			if((**i).o->needs_destroy() == false && (**backwardCheck).o->needs_destroy() == false)
-			{
-				(**i).o->collide((**backwardCheck).o);
-				(**backwardCheck).o->collide((**i).o);
-			}
-			++backwardCheck;
-		}
-	} // end FOREACH
+	return;
 }
 void drawObjects(void){
 	assert(false);
-	//this functionality has been folded into updateEngine()
+	//this functionality has been folded into updateEngine() for now
 	return;
 }
 

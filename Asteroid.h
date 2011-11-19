@@ -4,10 +4,11 @@
 class Asteroid :
 	public GameObject
 {
-	static const int MAX_AST_INV = 40;
+	static const int MAX_AST_INV = 60;
 public:
 	Asteroid(float nx, float ny, float d, VEC2 v, ALLEGRO_COLOR c,
 		     QUAD q, int l, int s, float r){
+		isBullet = false;
 		al_identity_transform(&myCurrentTransform);
 		x = nx;
 		y = ny;
@@ -22,11 +23,12 @@ public:
 		invincibilitycooldown = MAX_AST_INV;
 	}
 	Asteroid(void){
+		isBullet = false;
 		//completely random asteroid
 		al_identity_transform(&myCurrentTransform);
 		x = randint(0,640);
 		y = randint(0,480);
-		level = randint(2,5);
+		level = randint(2,4);
 		life = 2*level;
 		size = 4*level;
 		direction = randfloat(0, PI*2);
@@ -42,6 +44,7 @@ public:
 	}
 	Asteroid(float nx, float ny, int l){
 		assert(l > 1);
+		isBullet = false;
 		//partially random asteroid
 		al_identity_transform(&myCurrentTransform);
 		x = nx;

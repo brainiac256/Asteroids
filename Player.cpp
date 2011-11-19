@@ -54,6 +54,10 @@ void Player::update(void)
 		if (isKeyOn(KEY_SPACE)) {
 			//add new Bullet object
 			add(new Bullet(x, y, VEC2(direction, 12)));
+			add(new Bullet(x, y, VEC2(direction-PI/32, 12)));
+			add(new Bullet(x, y, VEC2(direction-PI/16, 12)));
+			add(new Bullet(x, y, VEC2(direction+PI/32, 12)));
+			add(new Bullet(x, y, VEC2(direction+PI/16, 12)));
 			//reset cooldown
 			cooldown = MAX_COOLDOWN;
 		}
@@ -62,7 +66,6 @@ void Player::update(void)
 
 void Player::collide(GameObject* o){
 	assert(o != NULL);
-	if(o!= this)	invincibilitycooldown = 20;
 	//std::cout << "\nCollided Player with a " << typeid(*o).name() << std::endl;
 	return;
 }

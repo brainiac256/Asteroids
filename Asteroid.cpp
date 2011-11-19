@@ -25,7 +25,7 @@ void Asteroid::update(void){
 void Asteroid::draw(void){
 	al_identity_transform(&myCurrentTransform);
 	al_rotate_transform(&myCurrentTransform, direction);
-	al_scale_transform(&myCurrentTransform,size,size);
+	al_scale_transform(&myCurrentTransform,size*1.2,size*1.2);
 	al_translate_transform(&myCurrentTransform,x,y);
 	al_use_transform(&myCurrentTransform);
 	drawQuad(&myQuad, myColor);
@@ -40,15 +40,26 @@ void Asteroid::collide(GameObject* o){
 		&& isInvincible() == false)
 	{
 		destroyme = true;
+		//TODO: particle stuff managed in the GameEngine
+
+		addParticle(new Particle(x, y, VEC2(randfloat(-PI, PI), randfloat(0,1)), VEC2(randfloat(-PI, PI), randfloat(-.1,0)), al_map_rgba_f(.5,.1,.1,.5)));
+		addParticle(new Particle(x, y, VEC2(randfloat(-PI, PI), randfloat(0,1)), VEC2(randfloat(-PI, PI), randfloat(-.1,0)), al_map_rgba_f(.5,.1,.1,.5)));
+		addParticle(new Particle(x, y, VEC2(randfloat(-PI, PI), randfloat(0,1)), VEC2(randfloat(-PI, PI), randfloat(-.1,0)), al_map_rgba_f(.5,.1,.1,.5)));
+		//addParticle(new Particle(x, y, VEC2(randfloat(-PI, PI), randfloat(0,1)), VEC2(randfloat(-PI, PI), randfloat(-.1,0)), al_map_rgba_f(.5,.1,.1,.5)));
+		//addParticle(new Particle(x, y, VEC2(randfloat(-PI, PI), randfloat(0,1)), VEC2(randfloat(-PI, PI), randfloat(-.1,0)), al_map_rgba_f(.5,.1,.1,.5)));
+
 		//myColor = al_map_rgb_f(1.0,.1,.1);
 		if(level < 3) {
 			//Smallest asteroid, just die
 			//TODO: score stuff managed in the GameEngine
 		} else {
 			//make smaller asteroids
+			add(new Asteroid(x, y, level-1));
+			add(new Asteroid(x, y, level-1));
 			//add(new Asteroid(x, y, level-1));
-			add(new Asteroid(x, y, level-1));
-			add(new Asteroid(x, y, level-1));
+			//add(new Asteroid(x, y, level-1));
+			//add(new Asteroid(x, y, level-1));
+			//add(new Asteroid(x, y, level-1));
 			//TODO: score stuff managed in the GameEngine
 		}
 	}

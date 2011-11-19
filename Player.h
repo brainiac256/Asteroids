@@ -11,6 +11,7 @@ class Player :
 	static const int MAX_COOLDOWN = 20;
 public:
 	Player(void){
+		isBullet = false;
 		al_identity_transform(&myCurrentTransform);
 		player_tri = TRIANGLE(2.0,0.0,-1.0,-1.0,-1.0,1.0);
 		myColor = al_map_rgb_f(1.0,1.0,1.0);

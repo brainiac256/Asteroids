@@ -6,6 +6,7 @@ class Bullet :
 {
 public:
 	Bullet(float nx, float ny, VEC2 v){
+		isBullet = true;
 		x = nx;
 		y = ny;
 		velocity = v;

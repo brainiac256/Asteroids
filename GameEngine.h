@@ -5,6 +5,7 @@
 #include <allegro5\color.h>
 #include <iostream>
 #include <algorithm>
+#include <vector>
 #include <list>
 #include <set>
 #include <cassert>
@@ -82,8 +83,10 @@ public:
 	float getX() {return x;}
 	float getY() {return y;}
 	float getS() {return size;}
+	bool amIABullet() {return isBullet;}
 	bool isInvincible() {return (invincibilitycooldown > 0);}
 protected:
+	bool isBullet;
 	bool destroyme;
 	float x,y;
 	float size;
@@ -99,7 +102,25 @@ typedef struct ObjectCapsule {
 	}
 };
 
+typedef struct Particle {
+	float x;
+	float y;
+	ALLEGRO_COLOR myColor;
+	VEC2 velocity;
+	VEC2 acceleration;
+	int life;
+	Particle(float nx, float ny, VEC2 v, VEC2 a, ALLEGRO_COLOR c){
+		x = nx;
+		y = ny;
+		velocity = v;
+		acceleration = a;
+		myColor = c;
+		life = 60;
+	}
+};
+
 unsigned long long add(GameObject* o);
+void addParticle(Particle* p);
 
 void updateEngine(void);
 void drawObjects(void);
